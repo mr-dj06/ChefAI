@@ -86,10 +86,4 @@ ChefAI/
 
 ---
 
-## 🎯 Roadmap  
-
-- [ ] Live cooking **step-by-step voice guidance**  
-
----
-
 
