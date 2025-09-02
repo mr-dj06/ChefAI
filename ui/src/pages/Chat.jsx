@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown"
 import {
   Send,
   Mic,
@@ -24,7 +25,7 @@ export default function Chat() {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const conversationRef = useRef(null);
-  const audioRef = useRef(null);
+  // const audioRef = useRef(null);
 
   // Generate session ID
   const [sessionId] = useState(() =>
@@ -81,12 +82,12 @@ export default function Chat() {
 
       setMessages((prev) => [...prev, aiMessage]);
 
-      if (audioEnabled && data.audio_url) {
-        audioRef.current.src = data.audio_url;
-        audioRef.current
-          .play()
-          .catch((e) => console.log("Audio play failed:", e));
-      }
+      // if (audioEnabled && data.audio_url) {
+      //   audioRef.current.src = data.audio_url;
+      //   audioRef.current
+      //     .play()
+      //     .catch((e) => console.log("Audio play failed:", e));
+      // }
 
       updateStatus("✨ Recipe suggestions ready!");
     } catch (error) {
@@ -188,12 +189,12 @@ export default function Chat() {
 
       setMessages((prev) => [...prev, aiMessage]);
 
-      if (audioEnabled && data.audio_url) {
-        audioRef.current.src = data.audio_url;
-        audioRef.current
-          .play()
-          .catch((e) => console.log("Audio play failed:", e));
-      }
+      // if (audioEnabled && data.audio_url) {
+      //   audioRef.current.src = data.audio_url;
+      //   audioRef.current
+      //     .play()
+      //     .catch((e) => console.log("Audio play failed:", e));
+      // }
 
       updateStatus("✨ Recipe suggestions ready!");
     } catch (error) {
@@ -383,9 +384,10 @@ export default function Chat() {
                               {message.role === "user" ? "You" : "ChefAI"}
                             </span>
                           </div>
-                          <p className="leading-relaxed whitespace-pre-wrap">
-                            {message.content}
-                          </p>
+                          <div className="leading-relaxed whitespace-pre-wrap">
+                            {message.role==="user" ? message.content : <ReactMarkdown children={message.content} />}
+                            {message.role!=="user"&&<audio className="w-full mt-3" onEnded={handleAudioEnd} autoPlay controls controlsList="nodownload" src={message.audioUrl}/>}
+                          </div>
                         </div>
                       </div>
                     ))
@@ -498,7 +500,7 @@ export default function Chat() {
           </div>
 
           {/* Hidden audio element */}
-          <audio ref={audioRef} onEnded={handleAudioEnd} />
+          {/* <audio controls ref={audioRef} onEnded={handleAudioEnd} muted/> */}
         </div>
       </div>
     </div>
