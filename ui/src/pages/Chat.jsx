@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown"
 import {
   Send,
@@ -28,9 +29,7 @@ export default function Chat() {
   // const audioRef = useRef(null);
 
   // Generate session ID
-  const [sessionId] = useState(() =>
-    Math.random().toString(36).substring(2, 15)
-  );
+  const sessionId = useParams();
 
   // Auto-scroll conversation
   useEffect(() => {
@@ -96,6 +95,7 @@ export default function Chat() {
         role: "assistant",
         content:
           "Sorry, I'm having trouble finding recipes right now. Please try again!",
+        audioUrl: "/error_audio.mp3",
         timestamp: Date.now(),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -212,6 +212,23 @@ export default function Chat() {
       sendTextMessage();
     }
   };
+
+  // Mute audio
+  const handleMute = (e) => {
+    e.preventDefault();
+    const audioEle = document.querySelectorAll("audio");
+    if(audioEnabled==true){
+      audioEle.forEach(audio=>{
+        audio.pause();
+      })
+      setAudioEnabled(!audioEnabled);
+    }
+    if(audioEnabled==false){
+      const lastAudioEle=audioEle[audioEle.length-1]
+      lastAudioEle.play()
+      setAudioEnabled(!audioEnabled);
+    }
+  }
 
   // Auto-record after AI response
   const handleAudioEnd = () => {
@@ -462,7 +479,7 @@ export default function Chat() {
                       </label>
 
                       <button
-                        onClick={() => setAudioEnabled(!audioEnabled)}
+                        onClick={handleMute}
                         className="p-2 rounded-xl bg-orange-100 hover:outline hover:outline-orange-600"
                         title={audioEnabled ? "Disable audio" : "Enable audio"}
                       >

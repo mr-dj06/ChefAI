@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { LandingEffect } from "../components";
 import { useNavigate } from "react-router-dom";
 import { FaRocket } from "react-icons/fa6";
 
 export default function HomePage() {
+  const [sessionId] = useState(() =>
+    Math.random().toString(36).substring(2, 15)
+  );
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate("/chat/:id");
+    navigate(`/chat/${sessionId}`);
   };
   return (
     <div className="max-w-full h-screen  flex">
